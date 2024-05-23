@@ -1,2 +1,3 @@
-# pc2-actividad2
-Actividad docker compose de Estructura del Computador 2
+# Frontend (Auth + CRUD) and Proxy
+
+Using Next.js
