@@ -1,12 +1,3 @@
-import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -16,6 +7,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import Login from "./Login"
+import Register from "./Register"
 
 export default function TeacherForm() {
     return (
@@ -29,7 +21,7 @@ export default function TeacherForm() {
                     <Login />
                 </TabsContent>
                 <TabsContent value="regiser">
-                    {/* Register pendiente */}
+                    <Register />
                 </TabsContent>
             </Tabs>
         </div>
