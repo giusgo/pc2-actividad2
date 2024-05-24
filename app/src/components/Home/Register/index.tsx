@@ -9,24 +9,25 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
+
 const formSchema = z.object({
-    username: z.string()
+    userName: z.string()
         .min(2, {
             message: "El usuario debe ser de mínimo 2 caracteres.",
         })
@@ -42,18 +43,51 @@ const formSchema = z.object({
         })
 })
 
-export default function Register() {
+interface RegisterProps {
+    btnsDisabled: boolean;
+    setBtnsDisabled: (arg0: boolean) => void;
+}
+
+export default function Register({ btnsDisabled, setBtnsDisabled }: RegisterProps) {
+    const { toast } = useToast();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            userName: "",
             password: ""
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        // Print
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        setBtnsDisabled(true);
+
+        try {
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                body: JSON.stringify(values),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (response.ok) {
+                toast({
+                    title: "Registro exitoso.",
+                    description: "Puede ingresar con su nuevo usuario ahora.",
+                    duration: 3000,
+                });
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Algo falló.",
+                    description: "Hubo un problema con su solicitud.",
+                });
+            }
+        } catch (error) {
+            console.error("Ocurrio un error:", error);
+        }
+        setBtnsDisabled(false);
     }
 
     return <Card>
@@ -68,7 +102,7 @@ export default function Register() {
                 <CardContent className="space-y-2">
                     <FormField
                         control={form.control}
-                        name="username"
+                        name="userName"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Usuario</FormLabel>
@@ -94,7 +128,14 @@ export default function Register() {
                     />
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit">Enviar</Button>
+                    {btnsDisabled ?
+                        <Button type="submit" disabled>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Enviando
+                        </Button>
+                        :
+                        <Button type="submit">Enviar</Button>
+                    }
                 </CardFooter>
             </form>
         </Form>

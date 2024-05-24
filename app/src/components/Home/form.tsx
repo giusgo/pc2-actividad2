@@ -1,5 +1,5 @@
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+"use client";
+
 import {
     Tabs,
     TabsContent,
@@ -8,8 +8,11 @@ import {
 } from "@/components/ui/tabs"
 import Login from "./Login"
 import Register from "./Register"
+import { useState } from "react"
 
 export default function TeacherForm() {
+    const [btnsDisabled, setBtnsDisabled] = useState<boolean>(false);
+
     return (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <Tabs defaultValue="login" className="w-[400px]">
@@ -21,7 +24,7 @@ export default function TeacherForm() {
                     <Login />
                 </TabsContent>
                 <TabsContent value="regiser">
-                    <Register />
+                    <Register btnsDisabled={btnsDisabled} setBtnsDisabled={setBtnsDisabled} />
                 </TabsContent>
             </Tabs>
         </div>
