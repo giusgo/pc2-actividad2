@@ -13,8 +13,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Expose ports 8000 and 9000
-EXPOSE 4000
+# Expose port 3000
+EXPOSE 3000
 
 # Command to run the Node.js program
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
