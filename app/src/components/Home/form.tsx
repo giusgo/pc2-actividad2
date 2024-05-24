@@ -21,7 +21,7 @@ export default function TeacherForm() {
                     <TabsTrigger value="regiser">Registro</TabsTrigger>
                 </TabsList>
                 <TabsContent value="login">
-                    <Login />
+                    <Login btnsDisabled={btnsDisabled} setBtnsDisabled={setBtnsDisabled} />
                 </TabsContent>
                 <TabsContent value="regiser">
                     <Register btnsDisabled={btnsDisabled} setBtnsDisabled={setBtnsDisabled} />

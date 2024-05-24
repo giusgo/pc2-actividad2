@@ -20,10 +20,13 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { signIn } from "next-auth/react";
 
 const formSchema = z.object({
     username: z.string()
@@ -42,7 +45,14 @@ const formSchema = z.object({
         })
 })
 
-export default function Login() {
+interface LoginProps {
+    btnsDisabled: boolean;
+    setBtnsDisabled: (arg0: boolean) => void;
+}
+
+export default function Login({ btnsDisabled, setBtnsDisabled }: LoginProps) {
+    const { toast } = useToast();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -51,9 +61,30 @@ export default function Login() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        // Print
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        // Deactivate buttons
+        setBtnsDisabled(true);
+
+        try {
+            const response = await signIn("credentials", {
+                username: values.username,
+                password: values.password,
+                redirect: false,
+            });
+
+            if (response?.error) {
+                setBtnsDisabled(false);
+
+                toast({
+                    variant: "destructive",
+                    title: "Algo falló.",
+                    description: "Hubo un problema con su solicitud.",
+                });
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
+            setBtnsDisabled(false);
+        }
     }
 
     return <Card>
@@ -94,7 +125,14 @@ export default function Login() {
                     />
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit">Enviar</Button>
+                    {btnsDisabled ?
+                        <Button type="submit" disabled>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Enviando
+                        </Button>
+                        :
+                        <Button type="submit">Enviar</Button>
+                    }
                 </CardFooter>
             </form>
         </Form>
