@@ -5,7 +5,7 @@ const proxiedAuth = process.env.PROXIED_AUTH || 'localhost';
 const proxiedBackend = process.env.PROXIED_BACKEND || 'localhost';
 
 // Create a proxy server instance for port 3000
-const proxy1 = httpProxy.createProxyServer({ target: `http://${proxiedAuth}:3000` });
+const proxy1 = httpProxy.createProxyServer({ target: `http://${proxiedAuth}:4000` });
 
 // Create a proxy server instance for port 4000
 const proxy2 = httpProxy.createProxyServer({ target: `http://${proxiedBackend}:4000` });
@@ -28,4 +28,4 @@ http.createServer(function (req, res) {
     });
 }).listen(9000);
 
-console.log('Proxy server running: 8000 -> 3000, 9000 -> 4000');
+console.log('Proxy server running: 8000 -> auth:4000, 9000 -> backend:4000');
