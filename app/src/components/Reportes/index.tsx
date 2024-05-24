@@ -11,6 +11,7 @@ import { useState } from "react";
 
 import { Create } from "./Create";
 import { Update } from "./Update";
+import { Delete } from "./Delete";
 
 export default function Panel() {
     const [btnsDisabled, setBtnsDisabled] = useState<boolean>(false);
@@ -27,6 +28,11 @@ export default function Panel() {
                     <CarouselItem key={2}>
                         <div className="p-1">
                             <Update btnsDisabled={btnsDisabled} setBtnsDisabled={setBtnsDisabled}/>
+                        </div>
+                    </CarouselItem>
+                    <CarouselItem key={3}>
+                        <div className="p-1">
+                            <Delete btnsDisabled={btnsDisabled} setBtnsDisabled={setBtnsDisabled}/>
                         </div>
                     </CarouselItem>
                 </CarouselContent>
