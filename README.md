@@ -1,3 +1,1 @@
-# Frontend (Auth + CRUD) and Proxy
-
-Using Next.js
+# Proxy + Auth + DB
