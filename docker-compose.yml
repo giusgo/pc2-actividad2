@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  proxy:
+    build:
+      context: ./proxy
+    container_name: proxy
+    restart: always
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    depends_on:
+      - auth
+      - backend
+    networks:
+      - college
+
+  auth:
+    build:
+      context: ./auth
+    container_name: auth
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - college
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - college
+
+  db:
+    image: postgres:16.0
+    container_name: db
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - college
+
+networks:
+  college:
+    driver: bridge
