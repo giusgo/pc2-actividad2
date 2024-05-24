@@ -12,6 +12,7 @@ export default function Home() {
   if (session) {
     redirect("/reportes");
   }
+  
   return (
     <main>
       <Background />
