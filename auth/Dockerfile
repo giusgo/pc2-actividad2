@@ -16,5 +16,7 @@ COPY . .
 # Expose port 3000
 EXPOSE 3000
 
+RUN npm run build
+
 # Command to run the Node.js program
 CMD ["npm", "start"]
