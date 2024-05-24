@@ -42,12 +42,12 @@ const formSchema = z.object({
         })
 })
 
-interface CreateProps {
+interface UpdateProps {
     btnsDisabled: boolean,
     setBtnsDisabled: (arg0: boolean) => void;
 }
 
-export function Create({ btnsDisabled, setBtnsDisabled }: CreateProps) {
+export function Update({ btnsDisabled, setBtnsDisabled }: UpdateProps) {
     const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -62,7 +62,7 @@ export function Create({ btnsDisabled, setBtnsDisabled }: CreateProps) {
         setBtnsDisabled(true);
 
         const query = {
-            operation: "create",
+            operation: "update",
             username: values.username,
             grade: values.grade
         }
@@ -78,7 +78,7 @@ export function Create({ btnsDisabled, setBtnsDisabled }: CreateProps) {
 
             if (response.ok) {
                 toast({
-                    description: "Registro creado.",
+                    description: "Registro actualizado.",
                     duration: 3000,
                 });
             } else {
@@ -98,8 +98,8 @@ export function Create({ btnsDisabled, setBtnsDisabled }: CreateProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Crear el registro de nota final para un estudiante</CardTitle>
-                <CardDescription>Digite el usuario y la nota correspondiente. Luego de clic en Guardar.</CardDescription>
+                <CardTitle>Modifique el registro de nota final para un estudiante</CardTitle>
+                <CardDescription>Digite el usuario y la nota actualizada. Luego de clic en Guardar.</CardDescription>
             </CardHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -138,7 +138,7 @@ export function Create({ btnsDisabled, setBtnsDisabled }: CreateProps) {
                                 Procesando
                             </Button>
                             :
-                            <Button type="submit">Guardar</Button>
+                            <Button type="submit">Actualizar</Button>
                         }
                     </CardFooter>
                 </form>
