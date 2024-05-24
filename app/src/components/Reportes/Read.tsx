@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -8,7 +10,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-
+import { Label } from "@/components/ui/label"
 import {
     Form,
     FormControl,
@@ -25,6 +27,8 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
+import { useState } from "react";
+
 const formSchema = z.object({
     username: z.string()
         .min(2, {
@@ -32,29 +36,22 @@ const formSchema = z.object({
         })
         .max(20, {
             message: "El usuario debe ser de máximo 20 caracteres."
-        }),
-    grade: z.coerce.number({ message: "Ingrese una nota válida." })
-        .min(0, {
-            message: "La nota mínima es 0."
-        })
-        .max(5.0, {
-            message: "La nota máxima es 5."
         })
 })
 
-interface UpdateProps {
+interface ReadProps {
     btnsDisabled: boolean,
     setBtnsDisabled: (arg0: boolean) => void;
 }
 
-export function Update({ btnsDisabled, setBtnsDisabled }: UpdateProps) {
+export function Read({ btnsDisabled, setBtnsDisabled }: ReadProps) {
     const { toast } = useToast();
+    const [inputValue, setInputValue] = useState<string>('');
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
-            grade: 0
+            username: ""
         },
     });
 
@@ -62,9 +59,8 @@ export function Update({ btnsDisabled, setBtnsDisabled }: UpdateProps) {
         setBtnsDisabled(true);
 
         const query = {
-            operation: "update",
-            username: values.username,
-            grade: values.grade
+            operation: "read",
+            username: values.username
         }
 
         try {
@@ -78,9 +74,13 @@ export function Update({ btnsDisabled, setBtnsDisabled }: UpdateProps) {
 
             if (response.ok) {
                 toast({
-                    description: "Registro actualizado.",
+                    description: "Registro obtenido.",
                     duration: 3000,
                 });
+
+                const grade = await response.json();
+                setInputValue(grade);
+
             } else {
                 toast({
                     variant: "destructive",
@@ -98,8 +98,8 @@ export function Update({ btnsDisabled, setBtnsDisabled }: UpdateProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Modifique el registro de nota final para un estudiante</CardTitle>
-                <CardDescription>Digite el usuario y la nota actualizada. Luego de clic en Actualizar.</CardDescription>
+                <CardTitle>Leer el registro de nota final para un estudiante</CardTitle>
+                <CardDescription>Digite el usuario. Luego de clic en Leer.</CardDescription>
             </CardHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -117,19 +117,10 @@ export function Update({ btnsDisabled, setBtnsDisabled }: UpdateProps) {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="grade"
-                            render={({ field }) => (
-                                <FormItem className="w-[30%]">
-                                    <FormLabel>Nota</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        <div className="grid items-center gap-3 w-[30%]">
+                            <Label htmlFor="email">Nota</Label>
+                            <Input type="text" readOnly value={inputValue}/>
+                        </div>
                     </CardContent>
                     <CardFooter>
                         {btnsDisabled ?
@@ -138,7 +129,7 @@ export function Update({ btnsDisabled, setBtnsDisabled }: UpdateProps) {
                                 Procesando
                             </Button>
                             :
-                            <Button type="submit">Actualizar</Button>
+                            <Button type="submit">Leer</Button>
                         }
                     </CardFooter>
                 </form>

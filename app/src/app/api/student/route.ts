@@ -14,12 +14,11 @@ export async function POST(request: NextRequest) {
         const requestData = await request.json();
 
         console.log(requestData);
-        console.log(CUD_ENDPOINT(requestData.operation));
 
         if (requestData.operation == "read") {
             const response = await axios.get(READ_ENDPOINT(requestData.username));
 
-            return NextResponse.json({grade: response.data.grade}, { status: 200 });
+            return NextResponse.json(response.data.grade, { status: 200 });
         } else {
             const response = await axios.post(CUD_ENDPOINT(requestData.operation), {
                 userName: requestData.username,
